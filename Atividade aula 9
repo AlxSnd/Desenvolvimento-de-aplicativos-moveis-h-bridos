@@ -1,0 +1,87 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(CalculadoraIMC());
+}
+
+class CalculadoraIMC extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Calculadora de IMC',
+      theme: ThemeData.dark(),
+      home: IMC(),
+    );
+  }
+}
+
+class IMC extends StatefulWidget {
+  @override
+  _IMCState createState() => _IMCState();
+}
+
+class _IMCState extends State<IMC> {
+  final TextEditingController _pesoController = TextEditingController();
+  final TextEditingController _alturaController = TextEditingController();
+  String _resultado = '';
+
+  void _calcularIMC() {
+    double peso = double.parse(_pesoController.text);
+    double altura = double.parse(_alturaController.text);
+    double imc = peso / (altura * altura);
+
+    setState(() {
+      _resultado =
+          'Seu IMC é: ${imc.toStringAsFixed(2)}\n' + _classificarIMC(imc);
+    });
+  }
+
+  String _classificarIMC(double imc) {
+    if (imc < 18.5) {
+      return 'Classificação: Abaixo do peso';
+    } else if (imc < 24.9) {
+      return 'Classificação: Peso normal';
+    } else if (imc < 29.9) {
+      return 'Classificação: Sobrepeso';
+    } else {
+      return 'Classificação: Obesidade';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Calculadora de IMC'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _pesoController,
+              decoration: InputDecoration(labelText: 'Peso (kg)'),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: _alturaController,
+              decoration: InputDecoration(labelText: 'Altura (m)'),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _calcularIMC,
+              child: Text('Calcular IMC'),
+            ),
+            SizedBox(height: 20),
+            Text(
+              _resultado,
+              style: TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
